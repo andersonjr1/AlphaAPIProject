@@ -54,7 +54,7 @@ class DataBase {
     loop();
   }
 
-  findByValue(searchValueValue, searchValueKey, callback) {
+  async findByValue(searchValueValue, searchValueKey, callback) {
     if (!this.dataBase) {
       return callback(new Error("The database not open"));
     }
