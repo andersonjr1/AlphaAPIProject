@@ -1,4 +1,4 @@
-import { DataBase } from "../database/index.js";
+import { userDataBase } from "../database/index.js";
 import { config } from "../config/index.js";
 import { v6 as uuidv6 } from "uuid";
 import jwt from "jsonwebtoken";
@@ -10,7 +10,6 @@ import {
   isValidName,
 } from "../utils/validate.js";
 
-const userDataBase = new DataBase("user");
 const SECRET_KEY = config.SECRET_KEY;
 
 function authenticate(req, res) {
@@ -37,8 +36,6 @@ function authenticate(req, res) {
     if (!data) {
       return res.status(400).json("The user doesn't exist");
     }
-
-    // Still needs to hash password
 
     if (!comparePassword(password, data.value.password)) {
       return res.status(400).json("Wrong password");
@@ -123,4 +120,4 @@ function createAccount(req, res) {
   });
 }
 
-export { authenticate, createAccount };
+export { authenticate, createAccount, userDataBase };

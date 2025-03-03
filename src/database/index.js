@@ -116,4 +116,8 @@ class DataBase {
   }
 }
 
-export { DataBase };
+const enrollmentDataBase = new DataBase("enrollment");
+const userDataBase = new DataBase("user");
+const activityDataBase = new DataBase("activity");
+
+export { enrollmentDataBase, userDataBase, activityDataBase };
