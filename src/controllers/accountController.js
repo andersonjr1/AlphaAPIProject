@@ -13,7 +13,7 @@ import {
 const SECRET_KEY = config.SECRET_KEY;
 
 function authenticate(req, res) {
-  const email = req.body.email.trim();
+  const email = req.body.email.trim().toLowerCase();
   const password = req.body.password.trim();
 
   if (!email || !password) {
@@ -57,12 +57,14 @@ function authenticate(req, res) {
       httpOnly: true,
     });
 
-    res.status(200).json("Success");
+    res
+      .status(200)
+      .json({ id: data.key, email: data.value.email, name: data.value.name });
   });
 }
 
 function createAccount(req, res) {
-  const email = req.body.email.trim();
+  const email = req.body.email.trim().toLowerCase();
   let password = req.body.password.trim();
   const name = req.body.name.trim();
 
@@ -112,9 +114,7 @@ function createAccount(req, res) {
           expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           httpOnly: true,
         });
-        return res
-          .status(201)
-          .json({ key: id, value: { email, password, name } });
+        return res.status(201).json({ id, email, name });
       }
     );
   });

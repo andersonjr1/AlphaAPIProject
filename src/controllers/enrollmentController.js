@@ -5,7 +5,7 @@ import { activityDataBase } from "./activityController.js";
 import { v6 as uuidv6 } from "uuid";
 
 function unenrollActivity(req, res) {
-  const userId = req.body.user_id;
+  const userId = req.user.id;
   const activityId = req.body.activity_id;
 
   if (!userId || !activityId) {
@@ -62,7 +62,7 @@ function unenrollActivity(req, res) {
 }
 
 function enrollActivity(req, res) {
-  const userId = req.body.user_id;
+  const userId = req.user.id;
   const activityId = req.body.activity_id;
 
   if (!userId || !activityId) {
