@@ -101,7 +101,7 @@ function listAvailableActivities(req, res) {
     });
   }
 
-  if (userIdQuery == userId || userAdmin) {
+  if (userIdQuery == userId || (userAdmin && userIdQuery)) {
     activityDataBase.readAllData((err, dataActivity) => {
       if (err) {
         return res.status(500).json("Internal Error");
