@@ -18,6 +18,20 @@ main{
     padding-left:90px;
 }
 
+ul{
+    padding: 0px;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+li{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
 .activity{
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -54,14 +68,6 @@ main{
     background-color: #132d81;
 }
 
-#activityButtonsContainer{
-    gap:10px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    width: fit-content;
-}
-
 
 #buttonDelete{
     background-color: #B22234;
@@ -88,6 +94,46 @@ main{
     cursor: pointer;
 }
 
+#overlay{
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0,0.3);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+}
+
+#modal {
+    padding: 40px 40px;
+    width: 60%;
+    width: fit-content;
+    /* min-width: 300px;
+    max-width: 800px; */
+    background-color: #EDE8F5;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 30px;
+    gap: 15px
+}
+
+#modalExit{
+    color:#791c27;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+#modalExit:hover{
+    cursor: pointer;
+}
+
 @media (max-width: 500px){
 
     h1{
@@ -104,5 +150,64 @@ main{
         padding-top: 80px;
     }
 
+}
+
+
+input{
+    width: 100%;
+    font-size: 1rem;
+    border: none;
+    padding: 5px;
+    background-color: #ffff;
+}
+
+.inputContainer{
+    display: flex;
+    width: 500px;
+    min-width: 240px;
+    margin: 5px;
+    background-color: #ffff;
+    gap:5px;
+    align-items: center;
+    padding: 5px;
+}
+
+
+#inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#textareaDescription{
+    margin: 5px;
+    width: 500px;
+    resize: vertical;
+    height: 100px;
+    max-height: 300px;
+    padding: 5px;
+}
+
+#buttonEditActivity{
+    font-size: 1.25rem;
+    color: #ffff;
+    background-color: #3D52A0;
+    padding: 10px 35px;
+    border-radius: 40px;
+    border: none;
+    transition: background-color 0.5s;
+}
+
+#buttonEditActivity:hover{
+    cursor: pointer;
+    background-color: #132d81;
+}
+
+#activityButtonsContainer{
+    gap:10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    width: fit-content;
 }
 
