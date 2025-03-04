@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import {
   permissionVerifyRedirect,
   permissionVerify,
+  redirectHome,
 } from "./routes/permissionVerify.js";
 import { isAdminSite, isAdminApi } from "./routes/isAdmin.js";
 const port = config.PORT;
@@ -19,9 +20,13 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.use("/entrar", express.static(__dirname + "/pages/login"));
+app.use("/entrar", redirectHome, express.static(__dirname + "/pages/login"));
 
-app.use("/registrar", express.static(__dirname + "/pages/register"));
+app.use(
+  "/registrar",
+  redirectHome,
+  express.static(__dirname + "/pages/register")
+);
 
 app.use("/api", routes);
 
@@ -44,7 +49,13 @@ app.use("/participando", express.static(__dirname + "/pages/participating"));
 
 app.use(permissionVerify, isAdminSite);
 
-app.use("/admin", express.static(__dirname + "/pages/admin"));
+app.use("/criar", express.static(__dirname + "/pages/create"));
+
+app.use("/atividades", express.static(__dirname + "/pages/activities"));
+
+app.use((req, res) => {
+  res.redirect("/disponivel");
+});
 
 app.listen(port, () => {
   console.log(`Servidor está rodando em http://localhost:${port}/`);

@@ -1,15 +1,15 @@
 function isAdminSite(req, res, next) {
-  //http://localhost:4000/disponivel/
   if (!req.user.admin) {
-    return res.send(
-      "<script>window.location.href =  'http://localhost:4000/' + 'disponivel';</script>"
-    );
+    return res.redirect("/disponivel");
   }
   next();
 }
 
 function isAdminApi(req, res, next) {
-  console.log(req.user);
+  if (!req.user.admin) {
+    res.status(403).json({ error: "O usuario não está logado" });
+  }
+  next();
 }
 
 export { isAdminSite, isAdminApi };

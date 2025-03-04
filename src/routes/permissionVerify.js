@@ -8,25 +8,38 @@ const secretKey = config.SECRET_KEY;
 function permissionVerifyRedirect(req, res, next) {
   const session_id = req.cookies.SESSION_ID;
   if (!session_id) {
-    return res.send(
-      "<script>window.location.href =  'http://localhost:4000/' + 'entrar';</script>"
-    );
+    return res.redirect("/entrar");
   }
 
   try {
     jwt.verify(session_id, secretKey, (err, decoded) => {
       if (err) {
-        return res.send(
-          "<script>window.location.href = 'http://localhost:4000/' + 'entrar';</script>"
-        );
+        return res.redirect("/entrar");
       }
       next();
     });
   } catch (error) {
     console.err(error);
-    return res.send(
-      "<script>window.location.href = 'http://localhost:4000/' + 'entrar';</script>"
-    );
+    return res.redirect("/entrar");
+  }
+}
+
+function redirectHome(req, res, next) {
+  const session_id = req.cookies.SESSION_ID;
+  if (!session_id) {
+    return next();
+  }
+
+  try {
+    jwt.verify(session_id, secretKey, (err, decoded) => {
+      if (err) {
+        return next();
+      }
+      return res.redirect("/");
+    });
+  } catch (error) {
+    console.err(error);
+    return next();
   }
 }
 
@@ -41,7 +54,6 @@ function permissionVerify(req, res, next) {
       if (err) {
         return res.status(403).json({ error: "Jwt inválido" });
       }
-
       req.user = decoded;
       next();
     });
@@ -53,4 +65,4 @@ function permissionVerify(req, res, next) {
   }
 }
 
-export { permissionVerifyRedirect, permissionVerify };
+export { permissionVerifyRedirect, permissionVerify, redirectHome };
