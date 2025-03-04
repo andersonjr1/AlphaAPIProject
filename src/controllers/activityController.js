@@ -10,7 +10,7 @@ function visualizeParticipantsOfActivity(req, res) {
 
   enrollmentDataBase.readAllData((err, dataEnrollment) => {
     if (err) {
-      return res.status(500).json("Internal Error");
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
 
     const participantsId = [];
@@ -24,12 +24,12 @@ function visualizeParticipantsOfActivity(req, res) {
     if (participantsId.length == 0) {
       return res
         .status(400)
-        .json({ error: "There are no participants in this activity" });
+        .json({ error: "Não tem participantes nessa atividade" });
     }
 
     userDataBase.readAllData((err, dataUser) => {
       if (err) {
-        return res.status(500).json("Internal Error");
+        return res.status(500).json({ error: "Erro interno no servidor" });
       }
       const participants = participantsId.map((id) => {
         const index = dataUser.findIndex((element) => {
@@ -57,14 +57,14 @@ function listAvailableActivities(req, res) {
   if (req.query.available == "true") {
     activityDataBase.readAllData((err, dataActivity) => {
       if (err) {
-        return res.status(500).json("Internal Error");
+        return res.status(500).json({ error: "Erro interno no servidor" });
       }
       if (dataActivity.length == 0) {
-        return res.status(400).json({ error: "There are no activities" });
+        return res.status(400).json({ error: "Não tem atividades" });
       }
       enrollmentDataBase.readAllData((err, dataEnrollment) => {
         if (err) {
-          return res.status(500).json("Internal Error");
+          return res.status(500).json({ error: "Erro interno no servidor" });
         }
 
         const activitiesWithEnrollment = {};
@@ -110,14 +110,14 @@ function listAvailableActivities(req, res) {
   if (userIdQuery == userId || (userAdmin && userIdQuery)) {
     activityDataBase.readAllData((err, dataActivity) => {
       if (err) {
-        return res.status(500).json("Internal Error");
+        return res.status(500).json({ error: "Erro interno no servidor" });
       }
       if (dataActivity.length == 0) {
-        return res.status(400).json({ error: "There are no activities" });
+        return res.status(400).json({ error: "Não tem atividades" });
       }
       enrollmentDataBase.readAllData((err, dataEnrollment) => {
         if (err) {
-          return res.status(500).json("Internal Error");
+          return res.status(500).json({ error: "Erro interno no servidor" });
         }
         const alreadyEnrolled = [];
 
@@ -149,7 +149,7 @@ function listAvailableActivities(req, res) {
 function visualizeAllActivities(req, res) {
   activityDataBase.readAllData((err, data) => {
     if (err) {
-      return res.status(500).json({ error: "Internal Error" });
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
     res.status(200).json(data);
   });
@@ -163,7 +163,7 @@ function addActivity(req, res) {
   let participantsMaximum = req.body.participants.trim();
 
   if (!title || !date || !place || !participantsMaximum) {
-    return res.status(400).json({ error: "Please enter all data" });
+    return res.status(400).json({ error: "Coloque todos os dados" });
   }
 
   date = new Date(date);
@@ -181,9 +181,9 @@ function addActivity(req, res) {
 
   activityDataBase.put(id, JSON.stringify(activity), (err) => {
     if (err) {
-      return res.status(500).json({ error: "Internal Error" });
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
-    res.status(200).json(activity);
+    res.status(201).json({ success: "A atividade foi criada com sucesso" });
   });
 }
 
@@ -191,15 +191,15 @@ function deleteActivity(req, res) {
   const id = req.params.id;
   activityDataBase.get(id, (err) => {
     if (err) {
-      return res.status(400).json({ error: "This activity was not found" });
+      return res.status(400).json({ error: "A atividade não foi encontrada" });
     }
 
     activityDataBase.del(id, (err) => {
       if (err) {
-        return res.status(400).json({ error: "Internal Error" });
+        return res.status(500).json({ error: "Erro interno no servidor" });
       }
 
-      res.status(200).json({ success: "Activity was deleted" });
+      res.status(200).json({ success: "Atividade foi deletada" });
     });
   });
 }
@@ -213,11 +213,11 @@ function editActivity(req, res) {
   let participantsMaximum = req.body.participants.trim();
 
   if (!title && !date && !place && !participantsMaximum && !description) {
-    return res.status(400).json({ error: "Please enter at least one" });
+    return res.status(400).json({ error: "Coloque pelo menos um campo" });
   }
   activityDataBase.get(id, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: "This activity was not found" });
+      return res.status(400).json({ error: "A atividade não foi encontrada" });
     }
 
     const activity = JSON.parse(data);
@@ -246,9 +246,9 @@ function editActivity(req, res) {
 
     activityDataBase.put(id, JSON.stringify(activity), (err) => {
       if (err) {
-        return res.status(500).json({ error: "Internal Error" });
+        return res.status(500).json({ error: "Erro interno no servidor" });
       }
-      res.status(200).json(activity);
+      res.status(200).json({ success: "Atividade foi editada" });
     });
   });
 }

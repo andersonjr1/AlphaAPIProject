@@ -17,28 +17,28 @@ function authenticate(req, res) {
   const password = req.body.password.trim();
 
   if (!email || !password) {
-    return res.status(400).json("Please enter all values");
+    return res.status(400).json({ error: "Coloque todos os valores" });
   }
 
   if (!isValidEmail(email) || !email) {
-    return res.status(400).json("Please enter a valid email");
+    return res.status(400).json({ error: "Coloque um email válido" });
   }
 
   if (!isValidPassword(password) || !password) {
-    return res.status(400).json("Please enter a valid password");
+    return res.status(400).json({ error: "Coloque uma senha válida" });
   }
 
   userDataBase.findByValue(email, "email", (error, data) => {
     if (error) {
-      return res.status(500).json("Error in the iterator");
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
 
     if (!data) {
-      return res.status(400).json("The user doesn't exist");
+      return res.status(401).json({ error: "O usuário não existe" });
     }
 
     if (!comparePassword(password, data.value.password)) {
-      return res.status(400).json("Wrong password");
+      return res.status(401).json({ error: "Senha errada" });
     }
 
     const signature = jwt.sign(
@@ -72,19 +72,19 @@ function createAccount(req, res) {
   const name = req.body.name.trim();
 
   if (!email || !password || !name) {
-    return res.status(400).json("Please enter all values");
+    return res.status(400).json({ error: "Coloque todos os valores" });
   }
 
   if (!isValidEmail(email)) {
-    return res.status(400).json("Please enter a valid email");
+    return res.status(400).json({ error: "Coloque um email válido" });
   }
 
   if (!isValidPassword(password)) {
-    return res.status(400).json("Please enter a valid password");
+    return res.status(400).json({ error: "Coloque uma senha válida" });
   }
 
   if (!isValidName(name)) {
-    return res.status(400).json("Please enter a valid name");
+    return res.status(400).json({ error: "Coloque um nome válida" });
   }
 
   const id = uuidv6();
@@ -93,11 +93,11 @@ function createAccount(req, res) {
 
   userDataBase.findByValue(email, "email", (error, data) => {
     if (error) {
-      return res.status(500).json("Error in the iterator");
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
 
     if (data) {
-      return res.status(403).json("The user already exists");
+      return res.status(401).json({ error: "O usuário já existe" });
     }
 
     userDataBase.put(
@@ -105,7 +105,7 @@ function createAccount(req, res) {
       JSON.stringify({ email, password, name, admin: false }),
       (error) => {
         if (error) {
-          return res.status(500).json("Error trying to create account");
+          return res.status(500).json({ error: "Erro interno no servidor" });
         }
 
         const signature = jwt.sign(
