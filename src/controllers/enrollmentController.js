@@ -17,7 +17,13 @@ function unenrollActivity(req, res) {
       return res.status(400).json({ error: "This activity was not found" });
     }
 
-    const participantsMaximum = JSON.parse(activityData).participants_maximum;
+    const now = new Date();
+
+    const activityDate = new Date(JSON.parse(activityData).date);
+
+    if (activityDate.getTime() < now.getTime()) {
+      return res.status(400).json({ error: "A atividade já foi realizada!" });
+    }
 
     userDataBase.get(userId, (err, userData) => {
       if (err) {
@@ -65,6 +71,8 @@ function enrollActivity(req, res) {
   const userId = req.user.id;
   const activityId = req.body.activity_id;
 
+  const now = new Date();
+
   if (!userId || !activityId) {
     res.status(400).json({ error: "Please enter all data" });
   }
@@ -72,6 +80,14 @@ function enrollActivity(req, res) {
   activityDataBase.get(activityId, (err, activityData) => {
     if (err) {
       return res.status(400).json({ error: "This activity was not found" });
+    }
+
+    const now = new Date();
+
+    const activityDate = new Date(JSON.parse(activityData).date);
+
+    if (activityDate.getTime() < now.getTime()) {
+      return res.status(400).json({ error: "A atividade já foi realizada!" });
     }
 
     const participantsMaximum = JSON.parse(activityData).participants_maximum;

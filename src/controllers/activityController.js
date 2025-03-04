@@ -73,6 +73,8 @@ function listAvailableActivities(req, res) {
 
         const alreadyEnrolled = [];
 
+        const now = new Date();
+
         dataEnrollment.forEach((enrollment) => {
           const activityId = enrollment.value.activity_id;
           if (enrollment.value.user == userId) {
@@ -84,7 +86,11 @@ function listAvailableActivities(req, res) {
           activitiesWithEnrollment[activityId]++;
         });
         dataActivity.forEach((activity) => {
-          if (alreadyEnrolled.indexOf(activity.key) != -1) {
+          const activityDate = new Date(activity.value.date);
+          if (
+            alreadyEnrolled.indexOf(activity.key) != -1 ||
+            now.getTime() > activityDate.getTime()
+          ) {
             return;
           }
           if (!activitiesWithEnrollment[activity.key]) {
@@ -117,6 +123,8 @@ function listAvailableActivities(req, res) {
 
         const enrolledActivities = [];
 
+        const now = new Date();
+
         dataEnrollment.forEach((enrollment) => {
           const activityId = enrollment.value.activity_id;
           if (enrollment.value.user == userIdQuery) {
@@ -124,7 +132,11 @@ function listAvailableActivities(req, res) {
           }
         });
         dataActivity.forEach((activity) => {
-          if (alreadyEnrolled.indexOf(activity.key) != -1) {
+          const activityDate = new Date(activity.value.date);
+          if (
+            alreadyEnrolled.indexOf(activity.key) != -1 &&
+            now.getTime() < activityDate.getTime()
+          ) {
             enrolledActivities.push(activity);
           }
         });
