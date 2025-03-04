@@ -20,4 +20,48 @@ function isValidName(name) {
   return name.length >= 3 && name.length <= 50;
 }
 
-export { isValidEmail, isValidPassword, isValidName };
+function isValidPlace(place) {
+  return place.length >= 3 && place.length <= 50;
+}
+
+function isValidDescription(description) {
+  return description.length >= 0 && description.length <= 250;
+}
+
+function isValidDate(date) {
+  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+  if (!dateRegex.test(date)) {
+    return false;
+  }
+
+  const dateTime = new Date(date + "T00:00:00");
+
+  const now = new Date();
+
+  if (now.getTime() > dateTime.getTime()) {
+    return false;
+  }
+
+  //Adds one year to the new object date
+  now.setFullYear(now.getFullYear() + 1);
+
+  if (dateTime.getTime() > now.getTime()) {
+    return false;
+  }
+
+  return true;
+}
+
+function isValidParticipants(participants) {
+  return !isNaN(participants) && participants > 0 && participants < 100;
+}
+
+export {
+  isValidEmail,
+  isValidPassword,
+  isValidName,
+  isValidPlace,
+  isValidDescription,
+  isValidDate,
+  isValidParticipants,
+};

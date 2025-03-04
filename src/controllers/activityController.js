@@ -5,6 +5,14 @@ import {
 } from "../database/index.js";
 import { v6 as uuidv6 } from "uuid";
 
+import {
+  isValidName,
+  isValidDescription,
+  isValidPlace,
+  isValidDate,
+  isValidParticipants,
+} from "../utils/validate.js";
+
 function visualizeParticipantsOfActivity(req, res) {
   const activityId = req.params.id;
 
@@ -166,8 +174,31 @@ function addActivity(req, res) {
     return res.status(400).json({ error: "Coloque todos os dados" });
   }
 
-  date = new Date(date);
-  participantsMaximum = Number(participantsMaximum);
+  participantsMaximum = parseInt(participantsMaximum);
+
+  if (!isValidDate(date)) {
+    return res.status(400).json({ error: "Data não é valida" });
+  }
+
+  if (!isValidName(title)) {
+    return res.status(400).json({ error: "Título não é valido" });
+  }
+
+  if (!isValidDescription(description)) {
+    return res.status(400).json({ error: "Descrição não é válida" });
+  }
+
+  if (!isValidParticipants(participantsMaximum)) {
+    return res
+      .status(400)
+      .json({ error: "Máximo de participantes não é valido" });
+  }
+
+  if (!isValidPlace(place)) {
+    return res.status(400).json({ error: "Local não é valido" });
+  }
+
+  date = new Date(date + "T00:00:00");
 
   const activity = {
     title,
@@ -223,24 +254,41 @@ function editActivity(req, res) {
     const activity = JSON.parse(data);
 
     if (title) {
+      if (!isValidName(title)) {
+        return res.status(400).json({ error: "Título não é valido" });
+      }
       activity.title = title;
     }
 
     if (description) {
+      if (!isValidDescription(description)) {
+        return res.status(400).json({ error: "Descrição não é válida" });
+      }
       activity.description = description;
     }
 
     if (date) {
-      date = new Date(date);
+      if (!isValidDate(date)) {
+        return res.status(400).json({ error: "Data não é valida" });
+      }
+      date = new Date(date + "T00:00:00");
       activity.date = date;
     }
 
     if (place) {
+      if (!isValidPlace(place)) {
+        return res.status(400).json({ error: "Local não é valido" });
+      }
       activity.place = place;
     }
 
     if (participantsMaximum) {
-      participantsMaximum = Number(participantsMaximum);
+      participantsMaximum = parseInt(participantsMaximum);
+      if (!isValidParticipants(participantsMaximum)) {
+        return res
+          .status(400)
+          .json({ error: "Máximo de participantes não é valido" });
+      }
       activity.participants_maximum = participantsMaximum;
     }
 
