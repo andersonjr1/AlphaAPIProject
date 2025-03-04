@@ -50,47 +50,88 @@ function visualizeParticipantsOfActivity(req, res) {
 }
 
 function listAvailableActivities(req, res) {
-  if (!(req.query.available == "true")) {
-    return res.status(400).json("You can only see available activities");
-  }
+  const userId = req.user.id;
+  const userAdmin = req.user.admin;
+  const userIdQuery = req.query.user_id;
 
-  activityDataBase.readAllData((err, dataActivity) => {
-    if (err) {
-      return res.status(500).json("Internal Error");
-    }
-    if (dataActivity.length == 0) {
-      return res.status(400).json({ error: "There are no activities" });
-    }
-    enrollmentDataBase.readAllData((err, dataEnrollment) => {
+  if (req.query.available == "true") {
+    activityDataBase.readAllData((err, dataActivity) => {
       if (err) {
         return res.status(500).json("Internal Error");
       }
-
-      const activitiesWithEnrollment = {};
-
-      const availableActivities = [];
-
-      dataEnrollment.forEach((enrollment) => {
-        const activityId = enrollment.value.activity_id;
-        if (!activitiesWithEnrollment[activityId]) {
-          return (activitiesWithEnrollment[activityId] = 1);
+      if (dataActivity.length == 0) {
+        return res.status(400).json({ error: "There are no activities" });
+      }
+      enrollmentDataBase.readAllData((err, dataEnrollment) => {
+        if (err) {
+          return res.status(500).json("Internal Error");
         }
-        activitiesWithEnrollment[activityId]++;
-      });
 
-      dataActivity.forEach((activity) => {
-        if (!activitiesWithEnrollment[activity.key]) {
-          activity.value.current_participants = 0;
+        const activitiesWithEnrollment = {};
+
+        const availableActivities = [];
+
+        const alreadyEnrolled = [];
+
+        dataEnrollment.forEach((enrollment) => {
+          const activityId = enrollment.value.activity_id;
+          if (enrollment.value.user == userId) {
+            alreadyEnrolled.push(activityId);
+          }
+          if (!activitiesWithEnrollment[activityId]) {
+            return (activitiesWithEnrollment[activityId] = 1);
+          }
+          activitiesWithEnrollment[activityId]++;
+        });
+        dataActivity.forEach((activity) => {
+          if (alreadyEnrolled.indexOf(activity.key) != -1) {
+            return;
+          }
+          if (!activitiesWithEnrollment[activity.key]) {
+            activity.value.current_participants = 0;
+            availableActivities.push(activity);
+            return;
+          }
+          activity.value.current_participants =
+            activitiesWithEnrollment[activity.key];
           availableActivities.push(activity);
-          return;
-        }
-        activity.value.current_participants =
-          activitiesWithEnrollment[activity.key];
-        availableActivities.push(activity);
+        });
+        res.status(200).json(availableActivities);
       });
-      res.status(200).json(availableActivities);
     });
-  });
+  }
+
+  if (userIdQuery == userId || userAdmin) {
+    activityDataBase.readAllData((err, dataActivity) => {
+      if (err) {
+        return res.status(500).json("Internal Error");
+      }
+      if (dataActivity.length == 0) {
+        return res.status(400).json({ error: "There are no activities" });
+      }
+      enrollmentDataBase.readAllData((err, dataEnrollment) => {
+        if (err) {
+          return res.status(500).json("Internal Error");
+        }
+        const alreadyEnrolled = [];
+
+        const enrolledActivities = [];
+
+        dataEnrollment.forEach((enrollment) => {
+          const activityId = enrollment.value.activity_id;
+          if (enrollment.value.user == userIdQuery) {
+            alreadyEnrolled.push(activityId);
+          }
+        });
+        dataActivity.forEach((activity) => {
+          if (alreadyEnrolled.indexOf(activity.key) != -1) {
+            enrolledActivities.push(activity);
+          }
+        });
+        res.status(200).json(enrolledActivities);
+      });
+    });
+  }
 }
 
 function visualizeAllActivities(req, res) {
