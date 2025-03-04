@@ -44,7 +44,7 @@ function visualizeParticipantsOfActivity(req, res) {
         };
         return participant;
       });
-      return res.status(400).json(participants);
+      return res.status(200).json(participants);
     });
   });
 }
