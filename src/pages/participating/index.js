@@ -15,14 +15,21 @@ async function renderActivities() {
     }
 
     const data = await response.json();
-    console.log(data);
 
     data.forEach((activity) => {
       const element = document.createElement("div");
+      const date = new Date(activity.value.date);
       element.id = activity.key;
       element.classList.add("activity");
       element.innerHTML = `
         <div class="activityName">${activity.value.title}</div>
+        <div class="activityName">${String(date.getDate()).padStart(
+          2,
+          "0"
+        )}/${String(date.getMonth()).padStart(
+        2,
+        "0"
+      )}/${date.getFullYear()}</div>
         <div class="activityLocation">${activity.value.place}</div>
         <button class="activityButton">Sair</button>
         `;
