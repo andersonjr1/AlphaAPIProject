@@ -21,12 +21,13 @@ const textareaDescription = document.getElementById("textareaDescription");
 const spanMessage = document.getElementById("spanMessage");
 
 buttonCreateActivity.addEventListener("click", async () => {
-  if (
-    !inputTitle.value ||
-    !inputPlace.value ||
-    !inputParticipants.value ||
-    !inputDate.value
-  ) {
+  const title = inputTitle.value;
+  const date = inputDate.value;
+  const place = inputPlace.value;
+  const description = textareaDescription.value;
+  const participants = inputParticipants.value;
+
+  if (!title || !place || !participants || !date) {
     message = messageCreate(false, "Coloque todos os campos");
     document.querySelector("body").appendChild(message);
     return;
@@ -38,11 +39,11 @@ buttonCreateActivity.addEventListener("click", async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      title: inputTitle.value,
-      description: textareaDescription.value,
-      data: inputDate.value,
-      place: inputPlace.value,
-      participants: inputParticipants.value,
+      title: title,
+      description: description,
+      data: date,
+      place: place,
+      participants: participants,
     }),
   });
 
@@ -51,6 +52,7 @@ buttonCreateActivity.addEventListener("click", async () => {
   if (!response.ok) {
     message = messageCreate(false, data.error);
     document.querySelector("body").appendChild(message);
+    return;
   }
 
   message = messageCreate(true, data.success);

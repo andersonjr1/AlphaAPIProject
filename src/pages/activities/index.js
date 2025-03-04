@@ -122,7 +122,7 @@ async function renderActivities() {
             document.querySelector("body").appendChild(message);
             return;
           }
-          overlay.style.display = "none";
+
           const response = await fetch(
             url + `api/activity/${selectedActivity}`,
             {
@@ -144,6 +144,7 @@ async function renderActivities() {
           if (!response.ok) {
             message = messageCreate(false, data.error);
             document.querySelector("body").appendChild(message);
+            return;
           }
 
           message = messageCreate(true, data.success);
@@ -164,6 +165,7 @@ async function renderActivities() {
         if (!response.ok) {
           message = messageCreate(false, data.error);
           document.querySelector("body").appendChild(message);
+          return;
         }
 
         overlay.style.display = "block";
