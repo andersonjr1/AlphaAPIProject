@@ -27,10 +27,10 @@ async function renderActivities() {
       element.classList.add("activity");
       element.innerHTML = `
         <div class="activityName">${activity.value.title}</div>
-        <div class="activityName">${String(date.getDate()).padStart(
+        <div class="activityData">${String(date.getDate()).padStart(
           2,
           "0"
-        )}/${String(date.getMonth()).padStart(
+        )}/${String(date.getMonth() + 1).padStart(
         2,
         "0"
       )}/${date.getFullYear()}</div>

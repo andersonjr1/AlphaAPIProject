@@ -18,14 +18,15 @@ async function renderActivities() {
     data.forEach((activity) => {
       const element = document.createElement("div");
       const date = new Date(activity.value.date);
+      console.log(date);
       element.id = activity.key;
       element.classList.add("activity");
       element.innerHTML = `
         <div class="activityName">${activity.value.title}</div>
-        <div class="activityName">${String(date.getDate()).padStart(
+        <div class="activityData">${String(date.getDate()).padStart(
           2,
           "0"
-        )}/${String(date.getMonth()).padStart(
+        )}/${String(date.getMonth() + 1).padStart(
         2,
         "0"
       )}/${date.getFullYear()}</div>
