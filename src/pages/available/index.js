@@ -1,6 +1,9 @@
-const url = "http://localhost:4000/";
+import nav from "./nav.js";
 const containerActivities = document.getElementById("containerActivities");
-const buttonParticipating = document.getElementById("buttonParticipating");
+// const buttonParticipating = document.getElementById("buttonParticipating");
+const url = "http://localhost:4000/";
+
+document.querySelector("body").appendChild(nav);
 
 async function renderActivities() {
   try {
@@ -58,15 +61,5 @@ async function renderActivities() {
     console.error(error.message);
   }
 }
-
-buttonParticipating.addEventListener("click", () => {
-  window.location.href = url + "participando";
-});
-
-const exit = document.getElementById("exitContainer");
-exit.addEventListener("click", () => {
-  localStorage.clear();
-  window.location.href = url + "sair";
-});
 
 renderActivities();

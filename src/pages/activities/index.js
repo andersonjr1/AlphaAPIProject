@@ -1,18 +1,13 @@
 import nav from "./nav.js";
-
-const url = "http://localhost:4000/";
 const containerActivities = document.getElementById("containerActivities");
-const buttonAvailable = document.getElementById("buttonAvailable");
+// const buttonParticipating = document.getElementById("buttonParticipating");
+const url = "http://localhost:4000/";
 
 document.querySelector("body").appendChild(nav);
 
 async function renderActivities() {
   try {
-    const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
-    const response = await fetch(
-      url + `api/activity/search?user_id=${user.id}`
-    );
+    const response = await fetch(url + "api/activity/");
 
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
@@ -35,12 +30,16 @@ async function renderActivities() {
         "0"
       )}/${date.getFullYear()}</div>
         <div class="activityLocation">${activity.value.place}</div>
-        <button class="activityButton">Sair</button>
+        <div id="activityButtonsContainer">
+          <button class="activityButton" id="buttonDelete">Excluir</button>
+          <button class="activityButton" id="editButton">Editar</button>
+        </div>
+        <span id="spanVisualizeParticipants">Visualizar participantes</span>
         `;
       const button = element.querySelector("button");
       button.addEventListener("click", async () => {
         const response = await fetch(url + "api/enrollment/", {
-          method: "DELETE",
+          method: "POST",
           body: JSON.stringify({
             activity_id: button.parentElement.id,
           }),
@@ -50,7 +49,6 @@ async function renderActivities() {
         });
 
         const data = await response.json();
-        console.log(data);
 
         containerActivities.innerHTML = "";
         renderActivities();

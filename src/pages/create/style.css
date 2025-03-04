@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body{
+    padding: 0px;
+    margin: 0px;
+    background-color: #EDE8F5;
+    height: 100vh;
+    font-family: "Rubik";
+}
+
+nav{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: fixed;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background-color: #202020;
+    left:0px;
+    height: 100%;
+    width: fit-content;
+    color: white;
+    & div > span {
+        display: none;
+    }
+    z-index: 1;
+}
+
+h1{
+    margin: 0px;
+    font-weight: 500;
+}
+
+main{
+    padding-top: 20px;
+    padding-left:90px;
+}
+
+input{
+    width: 100%;
+    font-size: 1rem;
+    border: none;
+    padding: 5px;
+    background-color: #ffff;
+}
+
+.activity{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 30px;
+    text-align: center;
+    background-color: #fff;
+    height: 300px;
+    width: 300px;
+    border-radius: 30px;
+    filter: drop-shadow(0 0 0.3rem rgb(0, 0, 0, 0.4));
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
+.activityName{
+    font-weight: 500;
+}
+
+.activityButton{
+    font-size: 1.25rem;
+    color: #ffff;
+    background-color: #3D52A0;
+    padding: 5px 25px;
+    border-radius: 40px;
+    border: none;
+    transition: background-color 0.5s;
+}
+
+.activityButton:hover{
+    cursor: pointer;
+    background-color: #132d81;
+}
+
+.activityAmountContainer{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.svgContainer{
+    padding: 10px;
+    border-radius: 10px;
+    transition: background-color 0.4s;
+}
+
+.svgContainer:hover{
+    cursor: pointer;
+    background-color: #4b4949;
+}
+
+.inputContainer{
+    display: flex;
+    width: 500px;
+    min-width: 240px;
+    margin: 5px;
+    background-color: #ffff;
+    gap:5px;
+    align-items: center;
+    padding: 5px;
+}
+
+#inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#containerActivities {
+    padding: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+#exitContainer{
+    cursor: pointer;
+}
+
+#textareaDescription{
+    margin: 5px;
+    width: 500px;
+    resize: vertical;
+    height: 100px;
+    max-height: 300px;
+    padding: 5px;
+}
+
+#buttonCreateActivity{
+    font-size: 1.25rem;
+    color: #ffff;
+    background-color: #3D52A0;
+    padding: 10px 35px;
+    border-radius: 40px;
+    border: none;
+    transition: background-color 0.5s;
+}
+
+#buttonCreateActivity:hover{
+    cursor: pointer;
+    background-color: #132d81;
+}
+
+@media (max-width: 500px){
+    nav{
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        position: fixed;
+        box-sizing: border-box;
+        display: flex;
+        padding: 10px;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        background-color: #202020;
+        left:0px;
+        height: fit-content;
+        width: 100%;
+        color: white;
+        & div > span {
+            display: none;
+        }
+    }
+
+    h1{
+        font-size: 1.7rem;
+        text-align: center;
+    }
+    #containerActivities {
+        padding: 50px 0px;
+    }
+
+    #exitContainer{
+        position: absolute;
+        right: 10px;
+    }
+
+    #buttonCreate:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        background-color: #4b4949;
+        content: "Criar Atividade";
+        text-align: center;
+        animation: slideDown 0.4s forwards;
+    }
+
+    main{
+        padding: 0px;
+        padding-top: 80px;
+    }
+
+    #buttonAvailable:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        background-color: #4b4949;
+        content: "Disponíveis";
+        animation: slideDown 0.4s forwards;
+    }
+    
+    #buttonParticipating:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        background-color: #4b4949;
+        content: "Participando";
+        animation: slideDown 0.4s forwards;
+    }
+
+    #exitContainer:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        transform: translateX(-50px);
+        background-color: #4b4949;
+        content: "Sair";
+        animation: slideDownExit 0.4s forwards;
+    }
+
+    @keyframes slideDown {
+        0% {
+            top:40px;
+        }
+        100% {
+            top:80px;
+        }
+    }
+
+    @keyframes slideDownExit {
+        0% {
+            top:40px;
+        }
+        100% {
+            top:60px;
+        }
+    }
+
+}
+
+@media (min-width: 500px){
+    #buttonAvailable:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        background-color: #4b4949;
+        transform: translateY(-33px);
+        content: "Disponíveis";
+        animation: slideLeft 0.4s forwards;
+    }
+    
+    #buttonParticipating:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        background-color: #4b4949;
+        transform: translateY(-33px);
+        content: "Participando";
+        animation: slideLeft 0.4s forwards;
+    }
+
+    #buttonCreate:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        background-color: #4b4949;
+        transform: translateY(-33px);
+        content: "Criar Atividade";
+        text-align: center;
+        animation: slideLeft 0.4s forwards;
+    }
+
+    #exitContainer{
+        position: absolute;
+        bottom:0;
+        width: 100%;
+        background-color: #7091E6;
+        padding: 10px 0px;
+        text-align: center;
+    }
+
+    #exitContainer:hover:after{
+        border-radius: 5px;
+        position: absolute;
+        padding: 5px 10px;
+        background-color: #4b4949;
+        content: "Sair";
+        animation: slideLeft 0.4s forwards;
+    }
+
+    @keyframes slideLeft {
+        0% {
+            left: 60px; 
+        }
+        100% {
+            left: 80px; 
+        }
+    }
+}

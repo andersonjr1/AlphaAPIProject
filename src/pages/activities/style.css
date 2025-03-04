@@ -40,10 +40,10 @@ main{
 }
 
 .activityButton{
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #ffff;
     background-color: #3D52A0;
-    padding: 5px 25px;
+    padding: 5px 20px;
     border-radius: 40px;
     border: none;
     transition: background-color 0.5s;
@@ -54,13 +54,22 @@ main{
     background-color: #132d81;
 }
 
-.activityAmountContainer{
+#activityButtonsContainer{
+    gap:10px;
     text-align: center;
     display: flex;
     align-items: center;
     width: fit-content;
 }
 
+
+#buttonDelete{
+    background-color: #B22234;
+}
+
+#buttonDelete:hover{
+    background-color: #791c27;
+}
 
 #containerActivities {
     padding: 50px;
@@ -71,6 +80,13 @@ main{
     justify-content: center;
 }
 
+#spanVisualizeParticipants{
+    color: #58648d;
+}
+
+#spanVisualizeParticipants:hover{
+    cursor: pointer;
+}
 
 @media (max-width: 500px){
 

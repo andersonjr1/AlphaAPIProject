@@ -34,7 +34,7 @@ button.addEventListener("click", async () => {
 
     localStorage.setItem("user", JSON.stringify(data));
 
-    window.location.href = url;
+    window.location.href = url + "disponivel";
   } catch (error) {
     console.error(error);
   }
