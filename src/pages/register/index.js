@@ -1,3 +1,7 @@
+import messageCreate from "./message.js";
+
+let message;
+
 const button = document.getElementById("buttonRegister");
 const inputEmail = document.getElementById("inputEmail");
 const inputName = document.getElementById("inputName");
@@ -9,15 +13,25 @@ const url = "http://localhost:4000/";
 
 button.addEventListener("click", async () => {
   try {
+    if (
+      !inputEmail.value ||
+      !inputName.value ||
+      !inputPassword.value ||
+      !inputCofirmPassword.value
+    ) {
+      message = messageCreate(false, "Preencha todos os campos");
+      document.querySelector("body").appendChild(message);
+    }
     if (!(inputPassword.value === inputCofirmPassword.value)) {
-      spanMessage.innerText = "As senhas não são as mesmas";
+      message = messageCreate(false, "As senhas tem que ser iguais");
+      document.querySelector("body").appendChild(message);
       return;
     }
     const response = await fetch(url + "api/register", {
       method: "POST",
       body: JSON.stringify({
         email: inputEmail.value,
-        name: inputPassword.value,
+        name: inputName.value,
         password: inputPassword.value,
       }),
       headers: {
@@ -28,7 +42,8 @@ button.addEventListener("click", async () => {
     const data = await response.json();
 
     if (!response.ok) {
-      spanMessage.innerText = data;
+      message = messageCreate(false, data.error);
+      document.querySelector("body").appendChild(message);
       throw new Error(`Response status: ${response.status}`);
     }
 

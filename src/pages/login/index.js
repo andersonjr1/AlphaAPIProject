@@ -1,3 +1,7 @@
+import messageCreate from "./message.js";
+
+let message;
+
 const button = document.getElementById("buttonLogin");
 const inputEmail = document.getElementById("inputEmail");
 const inputPassword = document.getElementById("inputPassword");
@@ -18,11 +22,11 @@ button.addEventListener("click", async () => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
     const data = await response.json();
 
     if (!response.ok) {
-      spanMessage.innerText = data;
+      message = messageCreate(false, data.error);
+      document.querySelector("body").appendChild(message);
       throw new Error(`Response status: ${response.status}`);
     }
 

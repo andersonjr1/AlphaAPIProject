@@ -6,6 +6,7 @@ const overlay = document.getElementById("overlay");
 const modal = document.getElementById("modal");
 const modalContent = document.getElementById("modalContent");
 const modalExit = document.getElementById("modalExit");
+let message;
 let selectedActivity = "";
 
 document.querySelector("body").appendChild(nav);
@@ -15,11 +16,13 @@ async function renderActivities() {
     containerActivities.innerHTML = "";
     const response = await fetch(url + "api/activity/");
 
+    const data = await response.json();
+
     if (!response.ok) {
+      message = messageCreate(false, data.error);
+      document.querySelector("body").appendChild(message);
       throw new Error(`Response status: ${response.status}`);
     }
-
-    const data = await response.json();
 
     data.forEach((activity) => {
       const element = document.createElement("div");
@@ -58,7 +61,13 @@ async function renderActivities() {
 
         const data = await response.json();
 
-        alert(data);
+        if (!response.ok) {
+          message = messageCreate(false, data.error);
+          document.querySelector("body").appendChild(message);
+        }
+
+        message = messageCreate(true, data.success);
+        document.querySelector("body").appendChild(message);
 
         containerActivities.innerHTML = "";
         renderActivities();
@@ -109,7 +118,8 @@ async function renderActivities() {
             !inputDate.value &&
             !textareaDescription.value
           ) {
-            spanMessage.innerText = "Coloque ao menos um valor";
+            message = messageCreate(false, "Coloque ao menos um valor");
+            document.querySelector("body").appendChild(message);
             return;
           }
           overlay.style.display = "none";
@@ -132,9 +142,12 @@ async function renderActivities() {
           const data = await response.json();
 
           if (!response.ok) {
-            spanMessage.innerText = data;
-            return;
+            message = messageCreate(false, data.error);
+            document.querySelector("body").appendChild(message);
           }
+
+          message = messageCreate(true, data.success);
+          document.querySelector("body").appendChild(message);
 
           overlay.style.display = "none";
 
@@ -147,10 +160,12 @@ async function renderActivities() {
         modalContent.innerHTML = ``;
         const response = await fetch(url + `api/activity/${selectedActivity}`);
         const data = await response.json();
+
         if (!response.ok) {
-          alert(data.error);
-          return;
+          message = messageCreate(false, data.error);
+          document.querySelector("body").appendChild(message);
         }
+
         overlay.style.display = "block";
         const ul = document.createElement("ul");
         data.forEach((element) => {
@@ -184,10 +199,4 @@ modal.addEventListener("click", (event) => {
 
 renderActivities();
 
-const message = messageCreate(false, "Isso é um teste");
-
-const message3 = messageCreate(true, "Isso é um teste");
-
-document.querySelector("body").appendChild(message);
-
-document.querySelector("body").appendChild(message3);
+//const message = messageCreate(false, "Isso é um teste");

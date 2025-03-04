@@ -2,6 +2,8 @@ import nav from "./nav.js";
 const containerActivities = document.getElementById("containerActivities");
 // const buttonParticipating = document.getElementById("buttonParticipating");
 const url = "http://localhost:4000/";
+import messageCreate from "./message.js";
+let message;
 
 document.querySelector("body").appendChild(nav);
 
@@ -9,11 +11,12 @@ async function renderActivities() {
   try {
     const response = await fetch(url + "api/activity/search?available=true");
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
     const data = await response.json();
+
+    if (!response.ok) {
+      message = messageCreate(false, data.error);
+      document.querySelector("body").appendChild(message);
+    }
 
     data.forEach((activity) => {
       const element = document.createElement("div");
@@ -52,6 +55,14 @@ async function renderActivities() {
         });
 
         const data = await response.json();
+
+        if (!response.ok) {
+          message = messageCreate(false, data.error);
+          document.querySelector("body").appendChild(message);
+        }
+
+        message = messageCreate(true, data.success);
+        document.querySelector("body").appendChild(message);
 
         containerActivities.innerHTML = "";
         renderActivities();

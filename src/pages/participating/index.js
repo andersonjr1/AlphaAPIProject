@@ -1,4 +1,6 @@
 import nav from "./nav.js";
+import messageCreate from "./message.js";
+let message;
 
 const url = "http://localhost:4000/";
 const containerActivities = document.getElementById("containerActivities");
@@ -9,16 +11,16 @@ document.querySelector("body").appendChild(nav);
 async function renderActivities() {
   try {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
     const response = await fetch(
       url + `api/activity/search?user_id=${user.id}`
     );
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
     const data = await response.json();
+
+    if (!response.ok) {
+      message = messageCreate(false, data.error);
+      document.querySelector("body").appendChild(message);
+    }
 
     data.forEach((activity) => {
       const element = document.createElement("div");
@@ -50,7 +52,14 @@ async function renderActivities() {
         });
 
         const data = await response.json();
-        console.log(data);
+
+        if (!response.ok) {
+          message = messageCreate(false, data.error);
+          document.querySelector("body").appendChild(message);
+        }
+
+        message = messageCreate(true, data.success);
+        document.querySelector("body").appendChild(message);
 
         containerActivities.innerHTML = "";
         renderActivities();

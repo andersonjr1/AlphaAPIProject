@@ -1,5 +1,9 @@
 import nav from "./nav.js";
 
+import messageCreate from "./message.js";
+
+let message;
+
 const url = "http://localhost:4000/";
 
 const buttonCreateActivity = document.getElementById("buttonCreateActivity");
@@ -23,7 +27,8 @@ buttonCreateActivity.addEventListener("click", async () => {
     !inputParticipants.value ||
     !inputDate.value
   ) {
-    spanMessage.innerText = "Preencha todos os valores";
+    message = messageCreate(false, "Coloque todos os campos");
+    document.querySelector("body").appendChild(message);
     return;
   }
 
@@ -40,18 +45,22 @@ buttonCreateActivity.addEventListener("click", async () => {
       participants: inputParticipants.value,
     }),
   });
+
   const data = await response.json();
-  console.log(data);
+
   if (!response.ok) {
-    spanMessage.innerText = data;
-    return;
+    message = messageCreate(false, data.error);
+    document.querySelector("body").appendChild(message);
   }
+
+  message = messageCreate(true, data.success);
+  document.querySelector("body").appendChild(message);
+
   inputTitle.value = "";
   inputPlace.value = "";
   inputParticipants.value = "";
   inputDate.value = "";
   textareaDescription.value = "";
-  spanMessage.innerText = "Atividade criada";
 });
 
 document.querySelector("body").appendChild(nav);
