@@ -103,14 +103,16 @@ input{
 
 .inputContainer{
     display: flex;
-    width: 500px;
-    min-width: 240px;
+    width: 90%;
+    max-width: 500px;
     margin: 5px;
     background-color: #ffff;
+    filter: drop-shadow(0 0 0.3rem rgb(0, 0, 0, 0.3));
     gap:5px;
     align-items: center;
     padding: 5px;
 }
+
 
 #inputs{
     display: flex;
@@ -133,7 +135,8 @@ input{
 
 #textareaDescription{
     margin: 5px;
-    width: 500px;
+    width: 90%;
+    max-width: 500px;
     resize: vertical;
     height: 100px;
     max-height: 300px;
