@@ -159,7 +159,9 @@ async function renderActivities() {
       spanVisualizeParticipants.addEventListener("click", async () => {
         selectedActivity = activity.key;
         modalContent.innerHTML = ``;
-        const response = await fetch(url + `api/activity/${selectedActivity}`);
+        const response = await fetch(
+          url + `api/enrollment/search?activity_id=${selectedActivity}`
+        );
         const data = await response.json();
 
         if (!response.ok) {
@@ -200,5 +202,3 @@ modal.addEventListener("click", (event) => {
 });
 
 renderActivities();
-
-//const message = messageCreate(false, "Isso é um teste");

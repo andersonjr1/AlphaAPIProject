@@ -12,7 +12,7 @@ async function renderActivities() {
   try {
     const user = JSON.parse(localStorage.getItem("user"));
     const response = await fetch(
-      url + `api/activity/search?user_id=${user.id}`
+      url + `api/enrollment/search?user_id=${user.id}`
     );
 
     const data = await response.json();

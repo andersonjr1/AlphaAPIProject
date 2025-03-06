@@ -138,4 +138,97 @@ function enrollActivity(req, res) {
   });
 }
 
-export { enrollmentDataBase, unenrollActivity, enrollActivity };
+function querySearch(req, res) {
+  const userId = req.user.id;
+  const userAdmin = req.user.admin;
+  const userIdQuery = req.query.user_id;
+  const activityIdQuery = req.query.activity_id;
+
+  console.log(userAdmin);
+
+  if (userIdQuery == userId || (userAdmin && userIdQuery)) {
+    activityDataBase.readAllData((err, dataActivity) => {
+      if (err) {
+        return res.status(500).json({ error: "Erro interno no servidor" });
+      }
+      if (dataActivity.length == 0) {
+        return res.status(400).json({ error: "Não tem atividades" });
+      }
+      enrollmentDataBase.readAllData((err, dataEnrollment) => {
+        if (err) {
+          return res.status(500).json({ error: "Erro interno no servidor" });
+        }
+        const alreadyEnrolled = [];
+
+        const enrolledActivities = [];
+
+        const now = new Date();
+
+        dataEnrollment.forEach((enrollment) => {
+          const activityId = enrollment.value.activity_id;
+          if (enrollment.value.user == userIdQuery) {
+            alreadyEnrolled.push(activityId);
+          }
+        });
+        dataActivity.forEach((activity) => {
+          const activityDate = new Date(activity.value.date);
+          if (
+            alreadyEnrolled.indexOf(activity.key) != -1 &&
+            now.getTime() < activityDate.getTime()
+          ) {
+            enrolledActivities.push(activity);
+          }
+        });
+        res.status(200).json(enrolledActivities);
+      });
+    });
+    return;
+  }
+
+  if (activityIdQuery && userAdmin) {
+    enrollmentDataBase.readAllData((err, dataEnrollment) => {
+      if (err) {
+        return res.status(500).json({ error: "Erro interno no servidor" });
+      }
+
+      const participantsId = [];
+
+      dataEnrollment.forEach((enrollment) => {
+        if (activityIdQuery == enrollment.value.activity_id) {
+          participantsId.push(enrollment.value.user);
+        }
+      });
+
+      if (participantsId.length == 0) {
+        return res
+          .status(400)
+          .json({ error: "Não tem participantes nessa atividade" });
+      }
+
+      userDataBase.readAllData((err, dataUser) => {
+        if (err) {
+          return res.status(500).json({ error: "Erro interno no servidor" });
+        }
+        const participants = participantsId.map((id) => {
+          const index = dataUser.findIndex((element) => {
+            return element.key == id;
+          });
+          const participant = {
+            key: id,
+            value: {
+              email: dataUser[index].value.email,
+              name: dataUser[index].value.name,
+            },
+          };
+          return participant;
+        });
+        return res.status(200).json(participants);
+      });
+    });
+    return;
+  }
+
+  res.status(400).json({ error: "Pesquisa não é valida" });
+}
+
+export { enrollmentDataBase, unenrollActivity, enrollActivity, querySearch };
