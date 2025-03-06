@@ -21,7 +21,6 @@ async function renderActivities() {
     data.forEach((activity) => {
       const element = document.createElement("div");
       const date = new Date(activity.value.date);
-      console.log(date);
       element.id = activity.key;
       element.classList.add("activity");
       element.innerHTML = `

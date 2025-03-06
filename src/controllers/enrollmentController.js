@@ -144,8 +144,6 @@ function querySearch(req, res) {
   const userIdQuery = req.query.user_id;
   const activityIdQuery = req.query.activity_id;
 
-  console.log(userAdmin);
-
   if (userIdQuery == userId || (userAdmin && userIdQuery)) {
     activityDataBase.readAllData((err, dataActivity) => {
       if (err) {
