@@ -12,6 +12,7 @@ import {
 
 const SECRET_KEY = config.SECRET_KEY;
 
+// Function to authenticate a user
 function authenticate(req, res) {
   const email = req.body.email.trim().toLowerCase();
   const password = req.body.password.trim();
@@ -28,6 +29,7 @@ function authenticate(req, res) {
     return res.status(400).json({ error: "Coloque uma senha válida" });
   }
 
+  // Find the user in the database by email
   userDataBase.findByValue(email, "email", (error, data) => {
     if (error) {
       return res.status(500).json({ error: "Erro interno no servidor" });
@@ -41,6 +43,7 @@ function authenticate(req, res) {
       return res.status(401).json({ error: "Senha errada" });
     }
 
+    // If authentication is successful, create a JWT
     const signature = jwt.sign(
       {
         id: data.key,
@@ -66,6 +69,7 @@ function authenticate(req, res) {
   });
 }
 
+// Function to create a new user account
 function createAccount(req, res) {
   const email = req.body.email.trim().toLowerCase();
   let password = req.body.password.trim();
@@ -91,6 +95,7 @@ function createAccount(req, res) {
 
   password = hashPassword(password);
 
+  // Check if a user with the same email already exists
   userDataBase.findByValue(email, "email", (error, data) => {
     if (error) {
       return res.status(500).json({ error: "Erro interno no servidor" });
@@ -100,6 +105,7 @@ function createAccount(req, res) {
       return res.status(401).json({ error: "O usuário já existe" });
     }
 
+    // If the user does not exist, create a new user in the database
     userDataBase.put(
       id,
       JSON.stringify({ email, password, name, admin: false }),
@@ -108,6 +114,7 @@ function createAccount(req, res) {
           return res.status(500).json({ error: "Erro interno no servidor" });
         }
 
+        // Create a JWT for the new user
         const signature = jwt.sign(
           { id, email, name, admin: false },
           SECRET_KEY,

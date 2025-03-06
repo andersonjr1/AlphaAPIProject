@@ -32,6 +32,7 @@ class DataBase {
     const iterator = this.dataBase.iterator();
     const data = [];
 
+    // Recursive function to iterate through the database
     function loop() {
       iterator.next((err, key, value) => {
         if (err) {
@@ -54,6 +55,7 @@ class DataBase {
     loop();
   }
 
+  // Method to find a record by a specific value in the database
   async findByValue(searchValueValue, searchValueKey, callback) {
     if (!this.dataBase) {
       return callback(new Error("The database not open"));
@@ -61,6 +63,7 @@ class DataBase {
 
     const iterator = this.dataBase.iterator();
 
+    // Recursive function to iterate through the database
     function loop() {
       iterator.next((err, key, value) => {
         if (err) {

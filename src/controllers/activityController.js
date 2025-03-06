@@ -13,6 +13,7 @@ import {
   isValidParticipants,
 } from "../utils/validate.js";
 
+// Function to list available activities for a user
 function listAvailableActivities(req, res) {
   const userId = req.user.id;
 
@@ -37,6 +38,7 @@ function listAvailableActivities(req, res) {
 
         const now = new Date();
 
+        // Process enrollments to count participants and track user enrollments
         dataEnrollment.forEach((enrollment) => {
           const activityId = enrollment.value.activity_id;
           if (enrollment.value.user == userId) {
@@ -47,6 +49,7 @@ function listAvailableActivities(req, res) {
           }
           activitiesWithEnrollment[activityId]++;
         });
+        // Filter and prepare available activities
         dataActivity.forEach((activity) => {
           const activityDate = new Date(activity.value.date);
           if (
@@ -73,6 +76,7 @@ function listAvailableActivities(req, res) {
   res.status(400).json({ error: "Pesquisa não é valida" });
 }
 
+// Function to fetch and return all activities
 function visualizeAllActivities(req, res) {
   activityDataBase.readAllData((err, data) => {
     if (err) {
@@ -82,6 +86,7 @@ function visualizeAllActivities(req, res) {
   });
 }
 
+// Function to add a new activity
 function addActivity(req, res) {
   const title = req.body.title.trim();
   const description = req.body.description.trim();
@@ -129,6 +134,7 @@ function addActivity(req, res) {
 
   const id = uuidv6();
 
+  // Save the activity to the database
   activityDataBase.put(id, JSON.stringify(activity), (err) => {
     if (err) {
       return res.status(500).json({ error: "Erro interno no servidor" });
@@ -137,6 +143,7 @@ function addActivity(req, res) {
   });
 }
 
+// Function to delete an activity
 function deleteActivity(req, res) {
   const id = req.params.id;
   activityDataBase.get(id, (err) => {
@@ -144,6 +151,7 @@ function deleteActivity(req, res) {
       return res.status(400).json({ error: "A atividade não foi encontrada" });
     }
 
+    // Delete the activity from the database
     activityDataBase.del(id, (err) => {
       if (err) {
         return res.status(500).json({ error: "Erro interno no servidor" });
@@ -154,6 +162,7 @@ function deleteActivity(req, res) {
   });
 }
 
+// Function to edit an existing activity
 function editActivity(req, res) {
   const id = req.params.id;
   const title = req.body.title.trim();
@@ -165,6 +174,8 @@ function editActivity(req, res) {
   if (!title && !date && !place && !participantsMaximum && !description) {
     return res.status(400).json({ error: "Coloque pelo menos um campo" });
   }
+
+  // Fetch the existing activity from the database
   activityDataBase.get(id, (err, data) => {
     if (err) {
       return res.status(400).json({ error: "A atividade não foi encontrada" });
@@ -211,6 +222,7 @@ function editActivity(req, res) {
       activity.participants_maximum = participantsMaximum;
     }
 
+    // Save the updated activity to the database
     activityDataBase.put(id, JSON.stringify(activity), (err) => {
       if (err) {
         return res.status(500).json({ error: "Erro interno no servidor" });

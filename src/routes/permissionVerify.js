@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 
 const secretKey = config.SECRET_KEY;
 
-//Se a pessoa estiver logada ela vai pro login
-
+// Middleware function to verify user permissions and redirect if unauthorized
 function permissionVerifyRedirect(req, res, next) {
   const session_id = req.cookies.SESSION_ID;
   if (!session_id) {
@@ -12,6 +11,7 @@ function permissionVerifyRedirect(req, res, next) {
   }
 
   try {
+    // Verify the session ID (JWT) using the secret key
     jwt.verify(session_id, secretKey, (err, decoded) => {
       if (err) {
         return res.redirect("/entrar");
@@ -24,6 +24,7 @@ function permissionVerifyRedirect(req, res, next) {
   }
 }
 
+// Middleware function to verify user permissions and return an error if unauthorized
 function permissionVerify(req, res, next) {
   const session_id = req.cookies.SESSION_ID;
   if (!session_id) {
@@ -31,6 +32,7 @@ function permissionVerify(req, res, next) {
   }
 
   try {
+    // Verify the session ID (JWT) using the secret key
     jwt.verify(session_id, secretKey, (err, decoded) => {
       if (err) {
         return res.status(403).json({ error: "Jwt inválido" });

@@ -4,6 +4,7 @@ import { activityDataBase } from "./activityController.js";
 
 import { v6 as uuidv6 } from "uuid";
 
+// Function to unenroll a user from an activity
 function unenrollActivity(req, res) {
   const userId = req.user.id;
   const activityId = req.body.activity_id;
@@ -12,6 +13,7 @@ function unenrollActivity(req, res) {
     res.status(400).json({ error: "Coloque todos os campos" });
   }
 
+  // Fetch the activity from the database
   activityDataBase.get(activityId, (err, activityData) => {
     if (err) {
       return res.status(400).json({ error: "A atividade não foi encontrada" });
@@ -25,6 +27,7 @@ function unenrollActivity(req, res) {
       return res.status(400).json({ error: "A atividade já foi realizada" });
     }
 
+    // Fetch the user from the database
     userDataBase.get(userId, (err, userData) => {
       if (err) {
         return res.status(400).json({ error: "O usuario não foi encontrado" });
@@ -48,12 +51,14 @@ function unenrollActivity(req, res) {
           return activity.value.user == userId;
         });
 
+        // If the user is not enrolled, return an error
         if (indexActivity == -1) {
           return res
             .status(400)
             .json({ error: "O usuário não está na atividade" });
         }
 
+        // Delete the enrollment record
         enrollmentDataBase.del(currentActivity[indexActivity].key, (err) => {
           if (err) {
             return res.status(500).json({ error: "Erro interno no servidor" });
@@ -67,6 +72,7 @@ function unenrollActivity(req, res) {
   });
 }
 
+// Function to enroll a user in an activity
 function enrollActivity(req, res) {
   const userId = req.user.id;
   const activityId = req.body.activity_id;
@@ -77,6 +83,7 @@ function enrollActivity(req, res) {
     res.status(400).json({ error: "Coloque todos os campos" });
   }
 
+  // Fetch the activity from the database
   activityDataBase.get(activityId, (err, activityData) => {
     if (err) {
       return res.status(400).json({ error: "A atividade não foi encontrada" });
@@ -92,11 +99,13 @@ function enrollActivity(req, res) {
 
     const participantsMaximum = JSON.parse(activityData).participants_maximum;
 
+    // Fetch the user from the database
     userDataBase.get(userId, (err, userData) => {
       if (err) {
         return res.status(400).json({ error: "O usuário não foi encontrado" });
       }
 
+      // Fetch all enrollments from the database
       enrollmentDataBase.readAllData((err, data) => {
         if (err) {
           return res.status(500).json({ error: "Erro interno no servidor" });
@@ -119,6 +128,8 @@ function enrollActivity(req, res) {
         }
 
         const id = uuidv6();
+
+        // Create the enrollment record
         enrollmentDataBase.put(
           id,
           JSON.stringify({ activity_id: activityId, user: userId }),
@@ -138,12 +149,14 @@ function enrollActivity(req, res) {
   });
 }
 
+// Function to perform a search query for enrollments
 function querySearch(req, res) {
   const userId = req.user.id;
   const userAdmin = req.user.admin;
   const userIdQuery = req.query.user_id;
   const activityIdQuery = req.query.activity_id;
 
+  // Search for activities a specific user is enrolled in
   if (userIdQuery == userId || (userAdmin && userIdQuery)) {
     activityDataBase.readAllData((err, dataActivity) => {
       if (err) {
@@ -162,12 +175,15 @@ function querySearch(req, res) {
 
         const now = new Date();
 
+        // Process enrollments to find activities the user is enrolled in
         dataEnrollment.forEach((enrollment) => {
           const activityId = enrollment.value.activity_id;
           if (enrollment.value.user == userIdQuery) {
             alreadyEnrolled.push(activityId);
           }
         });
+
+        // Filter activities the user is enrolled in and that are still upcoming
         dataActivity.forEach((activity) => {
           const activityDate = new Date(activity.value.date);
           if (
@@ -183,6 +199,7 @@ function querySearch(req, res) {
     return;
   }
 
+  // Search for participants in a specific activity (admin-only)
   if (activityIdQuery && userAdmin) {
     enrollmentDataBase.readAllData((err, dataEnrollment) => {
       if (err) {
@@ -191,6 +208,7 @@ function querySearch(req, res) {
 
       const participantsId = [];
 
+      // Find all users enrolled in the specified activity
       dataEnrollment.forEach((enrollment) => {
         if (activityIdQuery == enrollment.value.activity_id) {
           participantsId.push(enrollment.value.user);
@@ -203,10 +221,13 @@ function querySearch(req, res) {
           .json({ error: "Não tem participantes nessa atividade" });
       }
 
+      // Fetch all users from the database
       userDataBase.readAllData((err, dataUser) => {
         if (err) {
           return res.status(500).json({ error: "Erro interno no servidor" });
         }
+
+        // Map participant IDs to user details
         const participants = participantsId.map((id) => {
           const index = dataUser.findIndex((element) => {
             return element.key == id;
