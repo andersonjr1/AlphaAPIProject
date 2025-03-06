@@ -36,6 +36,10 @@ async function renderActivities() {
         2,
         "0"
       )}/${date.getFullYear()}</div>
+      <div class="activityHour">${String(date.getHours()).padStart(
+        2,
+        "0"
+      )}:${String(date.getMinutes()).padStart(2, "0")}</div>
         <div class="activityLocation">${activity.value.place}</div>
         <button class="activityButton">Sair</button>
         `;

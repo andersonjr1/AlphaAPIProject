@@ -122,7 +122,7 @@ function addActivity(req, res) {
     return res.status(400).json({ error: "Local não é valido" });
   }
 
-  date = new Date(date + "T00:00:00");
+  date = new Date(date);
 
   const activity = {
     title,
@@ -201,7 +201,7 @@ function editActivity(req, res) {
       if (!isValidDate(date)) {
         return res.status(400).json({ error: "Data não é valida" });
       }
-      date = new Date(date + "T00:00:00");
+      date = new Date(date);
       activity.date = date;
     }
 

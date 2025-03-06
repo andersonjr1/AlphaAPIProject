@@ -29,12 +29,13 @@ function isValidDescription(description) {
 }
 
 function isValidDate(date) {
-  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
-  if (!dateRegex.test(date)) {
+  const datetimeLocalRegex =
+    /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]$/;
+  if (!datetimeLocalRegex.test(date)) {
     return false;
   }
 
-  const dateTime = new Date(date + "T00:00:00");
+  const dateTime = new Date(date);
 
   const now = new Date();
 
