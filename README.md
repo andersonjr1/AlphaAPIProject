@@ -86,6 +86,8 @@ SECRET_KEY="your-secret-key-for-authentication"
 
 ```
 
+Change all URLs in all index.js files in the pages directories.
+
 <a name="api_endpoints"></a>
 ## API Endpoints
 The API provides RESTful endpoints for interacting with the application. Below is a list of available endpoints, their methods, description, if login is necessary and if must be admin.
@@ -99,6 +101,8 @@ The API provides RESTful endpoints for interacting with the application. Below i
 ### Enrollment
 | Method | Endpoint | Logged in | Admin | Description |
 | ------ | -------- | --------- | ----- | ----------- |
+| GET | /api/enrollment/search?activity_id | yes | yes | Returns all participants from an activity  |
+| GET | /api/enrollment/search?user_id | yes | yes | Returns all activities that a user is enrolled in  |
 | POST | /api/enrollment/ | yes | no | Enroll user in an activity |
 | DELETE | /api/enrollment/ | yes | no | Unroll user in an activity |
 
@@ -106,8 +110,7 @@ The API provides RESTful endpoints for interacting with the application. Below i
 | Method | Endpoint | Logged in | Admin | Description |
 | ------ | -------- | --------- | ----- | ----------- |
 | GET | /api/activity/ | yes | yes | Returns all activities |
-| GET | /api/activity/:id | yes | yes | Returns all participants from an activity  |
-| GET | /api/activity/search? | yes | no | Returns available activites for the user, or activities that the user is enrolled |
+| GET | /api/activity/search?available=true | yes | no | Returns available activites for the user|
 | POST | /api/activity/ | yes | yes | Create an activity |
 | PUT | /api/activity/:id | yes | yes | Edit an activity |
 | DELETE | /api/activity/:id | yes | yes | Delete an activity |
