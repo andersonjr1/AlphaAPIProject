@@ -24,25 +24,6 @@ function permissionVerifyRedirect(req, res, next) {
   }
 }
 
-function redirectHome(req, res, next) {
-  const session_id = req.cookies.SESSION_ID;
-  if (!session_id) {
-    return next();
-  }
-
-  try {
-    jwt.verify(session_id, secretKey, (err, decoded) => {
-      if (err) {
-        return next();
-      }
-      return res.redirect("/");
-    });
-  } catch (error) {
-    console.err(error);
-    return next();
-  }
-}
-
 function permissionVerify(req, res, next) {
   const session_id = req.cookies.SESSION_ID;
   if (!session_id) {
@@ -65,4 +46,4 @@ function permissionVerify(req, res, next) {
   }
 }
 
-export { permissionVerifyRedirect, permissionVerify, redirectHome };
+export { permissionVerifyRedirect, permissionVerify };

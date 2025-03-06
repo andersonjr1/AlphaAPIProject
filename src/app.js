@@ -7,8 +7,12 @@ import { fileURLToPath } from "url";
 import {
   permissionVerifyRedirect,
   permissionVerify,
-  redirectHome,
 } from "./routes/permissionVerify.js";
+import {
+  redirectHome,
+  redirectLogin,
+  redirectAvailable,
+} from "./utils/redirect.js";
 import { isAdminSite, isAdminApi } from "./routes/isAdmin.js";
 const port = config.PORT;
 const app = express();
@@ -32,16 +36,7 @@ app.use("/api", routes);
 
 app.use(permissionVerifyRedirect);
 
-app.use("/sair", (req, res) => {
-  res.cookie("SESSION_ID", "", {
-    expires: new Date(0),
-    httpOnly: true,
-  });
-
-  res.send(
-    "<script>window.location.href =  'http://localhost:4000/' + 'entrar';</script>"
-  );
-});
+app.use("/sair", redirectLogin);
 
 app.use("/disponivel", express.static(__dirname + "/pages/available"));
 
@@ -53,9 +48,7 @@ app.use("/criar", express.static(__dirname + "/pages/create"));
 
 app.use("/atividades", express.static(__dirname + "/pages/activities"));
 
-app.use((req, res) => {
-  res.redirect("/disponivel");
-});
+app.use(redirectAvailable);
 
 app.listen(port, () => {
   console.log(`Servidor está rodando em http://localhost:${port}/`);
