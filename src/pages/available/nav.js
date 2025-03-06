@@ -225,6 +225,10 @@ if (window.innerWidth > 500) {
 
     nav.removeChild(menuExit);
 
+    nav.removeChild(menuCreate);
+
+    nav.removeChild(menuActivities);
+
     this.addEventListener("click", openMenu);
 
     this.removeEventListener("click", closeMenu);
