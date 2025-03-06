@@ -1,9 +1,12 @@
+import jwt from "jsonwebtoken";
+import { config } from "../config/index.js";
+const secretKey = config.SECRET_KEY;
+
 function redirectHome(req, res, next) {
   const session_id = req.cookies.SESSION_ID;
   if (!session_id) {
     return next();
   }
-
   try {
     jwt.verify(session_id, secretKey, (err, decoded) => {
       if (err) {
@@ -12,7 +15,7 @@ function redirectHome(req, res, next) {
       return res.redirect("/");
     });
   } catch (error) {
-    console.err(error);
+    console.error(error);
     return next();
   }
 }
