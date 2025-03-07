@@ -164,10 +164,9 @@ async function renderActivities() {
         selectedActivity = activity.key;
         modalContent.innerHTML = ``;
         const response = await fetch(
-          url + `api/enrollment/search?activity_id=${selectedActivity}`
+          url + `api/user/search?activity_id=${selectedActivity}`
         );
         const data = await response.json();
-
         if (!response.ok) {
           message = messageCreate(false, data.error);
           document.querySelector("body").appendChild(message);
