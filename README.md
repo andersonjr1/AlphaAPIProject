@@ -79,7 +79,7 @@ project-name/
 To run this project, you need to set up environment variables in a `.env` file. Below are the required variables:
 ```.env
 # Server Configuration
-PORT=3000
+PORT=4000
 
 # JWT Authentication
 SECRET_KEY="your-secret-key-for-authentication"
