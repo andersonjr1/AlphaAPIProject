@@ -108,7 +108,7 @@ The API provides RESTful endpoints for interacting with the application. Below i
 ### User
 | Method | Endpoint | Logged in | Admin | Description |
 | ------ | -------- | --------- | ----- | ----------- |
-| GET | /api/enrollment/search?activity_id | yes | yes | Returns all participants from an activity  |
+| GET | /api/user/search?activity_id | yes | yes | Returns all participants from an activity  |
 
 ### Activities
 | Method | Endpoint | Logged in | Admin | Description |
