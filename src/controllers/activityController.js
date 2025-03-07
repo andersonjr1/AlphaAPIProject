@@ -58,6 +58,12 @@ function listAvailableActivities(req, res) {
           ) {
             return;
           }
+          if (
+            activitiesWithEnrollment[activity.key] ==
+            activity.value.participants_maximum
+          ) {
+            return;
+          }
           if (!activitiesWithEnrollment[activity.key]) {
             activity.value.current_participants = 0;
             availableActivities.push(activity);

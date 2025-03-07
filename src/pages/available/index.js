@@ -62,6 +62,7 @@ async function renderActivities() {
         if (!response.ok) {
           message = messageCreate(false, data.error);
           document.querySelector("body").appendChild(message);
+          return;
         }
 
         message = messageCreate(true, data.success);
