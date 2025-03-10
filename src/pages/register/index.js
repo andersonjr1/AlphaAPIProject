@@ -1,4 +1,4 @@
-import messageCreate from "./message.js";
+import messageCreate from "/components/message.js";
 
 let message;
 

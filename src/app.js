@@ -24,6 +24,8 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+app.use(express.static(__dirname + "/public"));
+
 app.use("/entrar", redirectHome, express.static(__dirname + "/pages/login"));
 
 app.use(

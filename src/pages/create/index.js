@@ -1,6 +1,6 @@
-import nav from "./nav.js";
+import nav from "/components/nav.js";
 
-import messageCreate from "./message.js";
+import messageCreate from "/components/message.js";
 
 let message;
 

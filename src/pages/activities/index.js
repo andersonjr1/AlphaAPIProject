@@ -1,5 +1,5 @@
-import nav from "./nav.js";
-import messageCreate from "./message.js";
+import nav from "/components/nav.js";
+import messageCreate from "/components/message.js";
 const containerActivities = document.getElementById("containerActivities");
 const url = "http://localhost:4000/";
 const overlay = document.getElementById("overlay");

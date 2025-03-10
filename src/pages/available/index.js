@@ -1,8 +1,8 @@
-import nav from "./nav.js";
+import nav from "/components/nav.js";
 const containerActivities = document.getElementById("containerActivities");
 // const buttonParticipating = document.getElementById("buttonParticipating");
 const url = "http://localhost:4000/";
-import messageCreate from "./message.js";
+import messageCreate from "/components/message.js";
 let message;
 
 document.querySelector("body").appendChild(nav);
