@@ -14,62 +14,72 @@ function unenrollActivity(req, res) {
   }
 
   // Fetch the activity from the database
-  activityDataBase.get(activityId, (err, activityData) => {
-    if (err) {
-      return res.status(400).json({ error: "A atividade não foi encontrada" });
-    }
-
-    const now = new Date();
-
-    const activityDate = new Date(JSON.parse(activityData).date);
-
-    if (activityDate.getTime() < now.getTime()) {
-      return res.status(400).json({ error: "A atividade já foi realizada" });
-    }
-
-    // Fetch the user from the database
-    userDataBase.get(userId, (err, userData) => {
+  try {
+    activityDataBase.get(activityId, (err, activityData) => {
       if (err) {
-        return res.status(400).json({ error: "O usuario não foi encontrado" });
+        return res
+          .status(400)
+          .json({ error: "A atividade não foi encontrada" });
       }
 
-      enrollmentDataBase.readAllData((err, data) => {
+      const now = new Date();
+
+      const activityDate = new Date(JSON.parse(activityData).date);
+
+      if (activityDate.getTime() < now.getTime()) {
+        return res.status(400).json({ error: "A atividade já foi realizada" });
+      }
+
+      // Fetch the user from the database
+      userDataBase.get(userId, (err, userData) => {
         if (err) {
-          return res.status(500).json({ error: "Erro interno no servidor" });
-        }
-
-        const currentActivity = data.filter(
-          (element) => element.value.activity_id == activityId
-        );
-        if (currentActivity.length == 0) {
           return res
             .status(400)
-            .json({ error: "O usuário não está na atividade" });
+            .json({ error: "O usuario não foi encontrado" });
         }
 
-        const indexActivity = currentActivity.findIndex((activity) => {
-          return activity.value.user == userId;
-        });
-
-        // If the user is not enrolled, return an error
-        if (indexActivity == -1) {
-          return res
-            .status(400)
-            .json({ error: "O usuário não está na atividade" });
-        }
-
-        // Delete the enrollment record
-        enrollmentDataBase.del(currentActivity[indexActivity].key, (err) => {
+        enrollmentDataBase.readAllData((err, data) => {
           if (err) {
             return res.status(500).json({ error: "Erro interno no servidor" });
           }
-          return res
-            .status(201)
-            .json({ success: "A desinscrição foi um sucesso" });
+
+          const currentActivity = data.filter(
+            (element) => element.value.activity_id == activityId
+          );
+          if (currentActivity.length == 0) {
+            return res
+              .status(400)
+              .json({ error: "O usuário não está na atividade" });
+          }
+
+          const indexActivity = currentActivity.findIndex((activity) => {
+            return activity.value.user == userId;
+          });
+
+          // If the user is not enrolled, return an error
+          if (indexActivity == -1) {
+            return res
+              .status(400)
+              .json({ error: "O usuário não está na atividade" });
+          }
+
+          // Delete the enrollment record
+          enrollmentDataBase.del(currentActivity[indexActivity].key, (err) => {
+            if (err) {
+              return res
+                .status(500)
+                .json({ error: "Erro interno no servidor" });
+            }
+            return res
+              .status(201)
+              .json({ success: "A desinscrição foi um sucesso" });
+          });
         });
       });
     });
-  });
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 // Function to enroll a user in an activity
@@ -84,69 +94,79 @@ function enrollActivity(req, res) {
   }
 
   // Fetch the activity from the database
-  activityDataBase.get(activityId, (err, activityData) => {
-    if (err) {
-      return res.status(400).json({ error: "A atividade não foi encontrada" });
-    }
-
-    const now = new Date();
-
-    const activityDate = new Date(JSON.parse(activityData).date);
-
-    if (activityDate.getTime() < now.getTime()) {
-      return res.status(400).json({ error: "A atividade já foi realizada" });
-    }
-
-    const participantsMaximum = JSON.parse(activityData).participants_maximum;
-
-    // Fetch the user from the database
-    userDataBase.get(userId, (err, userData) => {
+  try {
+    activityDataBase.get(activityId, (err, activityData) => {
       if (err) {
-        return res.status(400).json({ error: "O usuário não foi encontrado" });
+        return res
+          .status(400)
+          .json({ error: "A atividade não foi encontrada" });
       }
 
-      // Fetch all enrollments from the database
-      enrollmentDataBase.readAllData((err, data) => {
+      const now = new Date();
+
+      const activityDate = new Date(JSON.parse(activityData).date);
+
+      if (activityDate.getTime() < now.getTime()) {
+        return res.status(400).json({ error: "A atividade já foi realizada" });
+      }
+
+      const participantsMaximum = JSON.parse(activityData).participants_maximum;
+
+      // Fetch the user from the database
+      userDataBase.get(userId, (err, userData) => {
         if (err) {
-          return res.status(500).json({ error: "Erro interno no servidor" });
-        }
-
-        const currentActivity = data.filter(
-          (element) => element.value.activity_id == activityId
-        );
-
-        if (currentActivity.length >= participantsMaximum) {
           return res
             .status(400)
-            .json({ error: "A atividade não tem vagas disponíveis" });
+            .json({ error: "O usuário não foi encontrado" });
         }
 
-        if (currentActivity.find((activity) => activity.value.user == userId)) {
-          return res
-            .status(400)
-            .json({ error: "O usuário já está na atividade" });
-        }
-
-        const id = uuidv6();
-
-        // Create the enrollment record
-        enrollmentDataBase.put(
-          id,
-          JSON.stringify({ activity_id: activityId, user: userId }),
-          (err) => {
-            if (err) {
-              return res
-                .status(500)
-                .json({ error: "Erro interno no servidor" });
-            }
-            return res
-              .status(201)
-              .json({ success: "A inscrição foi um sucesso" });
+        // Fetch all enrollments from the database
+        enrollmentDataBase.readAllData((err, data) => {
+          if (err) {
+            return res.status(500).json({ error: "Erro interno no servidor" });
           }
-        );
+
+          const currentActivity = data.filter(
+            (element) => element.value.activity_id == activityId
+          );
+
+          if (currentActivity.length >= participantsMaximum) {
+            return res
+              .status(400)
+              .json({ error: "A atividade não tem vagas disponíveis" });
+          }
+
+          if (
+            currentActivity.find((activity) => activity.value.user == userId)
+          ) {
+            return res
+              .status(400)
+              .json({ error: "O usuário já está na atividade" });
+          }
+
+          const id = uuidv6();
+
+          // Create the enrollment record
+          enrollmentDataBase.put(
+            id,
+            JSON.stringify({ activity_id: activityId, user: userId }),
+            (err) => {
+              if (err) {
+                return res
+                  .status(500)
+                  .json({ error: "Erro interno no servidor" });
+              }
+              return res
+                .status(201)
+                .json({ success: "A inscrição foi um sucesso" });
+            }
+          );
+        });
       });
     });
-  });
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 // Function to perform a search query for enrollments

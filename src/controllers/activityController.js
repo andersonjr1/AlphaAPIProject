@@ -141,12 +141,16 @@ function addActivity(req, res) {
   const id = uuidv6();
 
   // Save the activity to the database
-  activityDataBase.put(id, JSON.stringify(activity), (err) => {
-    if (err) {
-      return res.status(500).json({ error: "Erro interno no servidor" });
-    }
-    res.status(201).json({ success: "A atividade foi criada com sucesso" });
-  });
+  try {
+    activityDataBase.put(id, JSON.stringify(activity), (err) => {
+      if (err) {
+        return res.status(500).json({ error: "Erro interno no servidor" });
+      }
+      res.status(201).json({ success: "A atividade foi criada com sucesso" });
+    });
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 // Function to delete an activity
@@ -180,62 +184,67 @@ function editActivity(req, res) {
   if (!title && !date && !place && !participantsMaximum && !description) {
     return res.status(400).json({ error: "Coloque pelo menos um campo" });
   }
-
-  // Fetch the existing activity from the database
-  activityDataBase.get(id, (err, data) => {
-    if (err) {
-      return res.status(400).json({ error: "A atividade não foi encontrada" });
-    }
-
-    const activity = JSON.parse(data);
-
-    if (title) {
-      if (!isValidName(title)) {
-        return res.status(400).json({ error: "Título não é valido" });
-      }
-      activity.title = title;
-    }
-
-    if (description) {
-      if (!isValidDescription(description)) {
-        return res.status(400).json({ error: "Descrição não é válida" });
-      }
-      activity.description = description;
-    }
-
-    if (date) {
-      if (!isValidDate(date)) {
-        return res.status(400).json({ error: "Data não é valida" });
-      }
-      date = new Date(date);
-      activity.date = date;
-    }
-
-    if (place) {
-      if (!isValidPlace(place)) {
-        return res.status(400).json({ error: "Local não é valido" });
-      }
-      activity.place = place;
-    }
-
-    if (participantsMaximum) {
-      participantsMaximum = parseInt(participantsMaximum);
-      if (!isValidParticipants(participantsMaximum)) {
+  try {
+    // Fetch the existing activity from the database
+    activityDataBase.get(id, (err, data) => {
+      if (err) {
         return res
           .status(400)
-          .json({ error: "Máximo de participantes não é valido" });
+          .json({ error: "A atividade não foi encontrada" });
       }
-      activity.participants_maximum = participantsMaximum;
-    }
 
-    // Save the updated activity to the database
-    activityDataBase.put(id, JSON.stringify(activity), (err) => {
-      if (err) {
-        return res.status(500).json({ error: "Erro interno no servidor" });
+      const activity = JSON.parse(data);
+
+      if (title) {
+        if (!isValidName(title)) {
+          return res.status(400).json({ error: "Título não é valido" });
+        }
+        activity.title = title;
       }
-      res.status(200).json({ success: "Atividade foi editada" });
+
+      if (description) {
+        if (!isValidDescription(description)) {
+          return res.status(400).json({ error: "Descrição não é válida" });
+        }
+        activity.description = description;
+      }
+
+      if (date) {
+        if (!isValidDate(date)) {
+          return res.status(400).json({ error: "Data não é valida" });
+        }
+        date = new Date(date);
+        activity.date = date;
+      }
+
+      if (place) {
+        if (!isValidPlace(place)) {
+          return res.status(400).json({ error: "Local não é valido" });
+        }
+        activity.place = place;
+      }
+
+      if (participantsMaximum) {
+        participantsMaximum = parseInt(participantsMaximum);
+        if (!isValidParticipants(participantsMaximum)) {
+          return res
+            .status(400)
+            .json({ error: "Máximo de participantes não é valido" });
+        }
+        activity.participants_maximum = participantsMaximum;
+      }
+
+      // Save the updated activity to the database
+      activityDataBase.put(id, JSON.stringify(activity), (err) => {
+        if (err) {
+          return res.status(500).json({ error: "Erro interno no servidor" });
+        }
+        res.status(200).json({ success: "Atividade foi editada" });
+      });
     });
-  });
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 export {

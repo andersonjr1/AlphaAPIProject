@@ -106,27 +106,31 @@ function createAccount(req, res) {
     }
 
     // If the user does not exist, create a new user in the database
-    userDataBase.put(
-      id,
-      JSON.stringify({ email, password, name, admin: false }),
-      (error) => {
-        if (error) {
-          return res.status(500).json({ error: "Erro interno no servidor" });
-        }
+    try {
+      userDataBase.put(
+        id,
+        JSON.stringify({ email, password, name, admin: false }),
+        (error) => {
+          if (error) {
+            return res.status(500).json({ error: "Erro interno no servidor" });
+          }
 
-        // Create a JWT for the new user
-        const signature = jwt.sign(
-          { id, email, name, admin: false },
-          SECRET_KEY,
-          { expiresIn: "7d" }
-        );
-        res.cookie("SESSION_ID", signature, {
-          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
-        });
-        return res.status(201).json({ id, email, name, admin: false });
-      }
-    );
+          // Create a JWT for the new user
+          const signature = jwt.sign(
+            { id, email, name, admin: false },
+            SECRET_KEY,
+            { expiresIn: "7d" }
+          );
+          res.cookie("SESSION_ID", signature, {
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+          });
+          return res.status(201).json({ id, email, name, admin: false });
+        }
+      );
+    } catch (error) {
+      console.error(error.message);
+    }
   });
 }
 

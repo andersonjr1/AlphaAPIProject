@@ -32,37 +32,40 @@ buttonCreateActivity.addEventListener("click", async () => {
     document.querySelector("body").appendChild(message);
     return;
   }
+  try {
+    const response = await fetch(url + "api/activity", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        data: date,
+        place: place,
+        participants: participants,
+      }),
+    });
 
-  const response = await fetch(url + "api/activity", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title: title,
-      description: description,
-      data: date,
-      place: place,
-      participants: participants,
-    }),
-  });
+    const data = await response.json();
 
-  const data = await response.json();
+    if (!response.ok) {
+      message = messageCreate(false, data.error);
+      document.querySelector("body").appendChild(message);
+      return;
+    }
 
-  if (!response.ok) {
-    message = messageCreate(false, data.error);
+    message = messageCreate(true, data.success);
     document.querySelector("body").appendChild(message);
-    return;
+
+    inputTitle.value = "";
+    inputPlace.value = "";
+    inputParticipants.value = "";
+    inputDate.value = "";
+    textareaDescription.value = "";
+  } catch (error) {
+    console.error(error.message);
   }
-
-  message = messageCreate(true, data.success);
-  document.querySelector("body").appendChild(message);
-
-  inputTitle.value = "";
-  inputPlace.value = "";
-  inputParticipants.value = "";
-  inputDate.value = "";
-  textareaDescription.value = "";
 });
 
 document.querySelector("body").appendChild(nav);

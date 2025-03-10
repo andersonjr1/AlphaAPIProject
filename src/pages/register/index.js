@@ -51,7 +51,7 @@ button.addEventListener("click", async () => {
 
     window.location.href = url + "disponivel";
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
   }
 });
 
