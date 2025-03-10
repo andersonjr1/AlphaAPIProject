@@ -65,6 +65,7 @@ project-name/
 │   ├── config/          # Enviroment configuration.
 │   ├── controllers/     # Logic for handling requests
 │   ├── database/        # Databases
+│   ├── public/          # Static components
 │   ├── pages/           # Static pages
 │   ├── routes/          # API route definitions
 │   ├── utils/           # Utility functions
